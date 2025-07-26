@@ -1,0 +1,91 @@
+✅ 1. 🧳 Prepare Your Project Folder
+
+Your project folder should look like this:
+
+askcsv-ai/
+├── app.py
+├── agent.py
+├── requirements.txt  ✅ (you'll create this)
+├── data/
+│   └── drc_mv_cfm_stock_of_lmis_2025_06_24.csv
+├── tools/
+│   └── csv_tools.py
+
+
+✅ 2. 📄 Create a requirements.txt File
+
+Make a file named requirements.txt in the root with the following content:
+
+streamlit
+pandas
+plotly
+langchain
+langchain-community
+ollama
+
+👉 If you're using conda or virtualenv, no need to include system-wide packages.
+✅ 3. 🧱 Install Python (if not installed)
+
+Download and install Python 3.9+ from:
+👉 https://www.python.org/downloads/
+
+During install:
+
+    ✅ Check “Add Python to PATH”
+
+✅ 4. 📁 Copy Project to Other PC
+
+Move the full askcsv-ai folder (with all .py files and folders) to the target PC using USB or shared network.
+✅ 5. 🧪 Create and Activate a Virtual Environment (optional but recommended)
+
+# Navigate to project directory
+cd askcsv-ai
+
+# Create a virtual environment
+python -m venv venv
+
+# Activate the environment
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+✅ 6. 📦 Install Dependencies
+
+pip install -r requirements.txt
+
+    This installs streamlit, pandas, langchain, ollama, and plotly.
+
+✅ 7. ⚙️ Make Sure Ollama is Installed & Running
+🔸 On the other PC:
+
+    Download and install Ollama from
+    👉 https://ollama.com/
+
+    Open a terminal and run:
+
+ollama run llama3
+
+(You can also use another model like mistral or llama2 if preferred.)
+✅ 8. 🚀 Run the Streamlit App
+
+In the same terminal:
+
+streamlit run app.py
+
+It will launch in your default browser at:
+👉 http://localhost:8501
+✅ 9. 📂 Upload a CSV and Ask Questions!
+
+Use the sidebar to:
+
+    Upload CSVs
+
+    View query history
+
+    Clear history
+    Then ask questions like:
+
+    "Show total OrderQty by ProductName"
+
+    "Map of all facilities"

@@ -1,0 +1,65 @@
+import pandas as pd
+import traceback
+from langchain_community.llms import Ollama
+from langchain.agents import tool
+
+llm = Ollama(model="llama3")
+
+# Global DataFrame
+df = None
+
+def load_csv(file_path):
+    """
+    Load a CSV file into a global DataFrame.
+    """
+    global df
+    df = pd.read_csv(file_path)
+    print(f"Loaded CSV with {df.shape[0]} rows and {df.shape[1]} columns.")
+
+@tool
+def analyze_csv(question: str) -> str:
+    """
+    Analyze CSV data using a natural-language question.
+    Can return summary, table, or chart using pandas and Plotly.
+    """
+    global df
+    if df is None:
+        return "CSV not loaded."
+
+    try:
+        prompt = f"""
+You are a Python data analyst. You are given the following DataFrame `df`:
+{df.head(5).to_string(index=False)}
+
+Write code to answer the user's question:
+\"\"\"{question}\"\"\"
+
+Use `pandas` for data and `plotly.express` for charts if needed.
+Use `result = ...` as the final output (can be a string, DataFrame, or chart).
+Do NOT include print statements or explanations.
+Assume df is already loaded.
+"""
+
+        import re
+        raw_response = llm.invoke(prompt)
+
+        # Extract just the code
+        code_match = re.search(r"```(?:python)?(.*?)```", raw_response, re.DOTALL)
+        if code_match:
+            code = code_match.group(1).strip()
+        else:
+            lines = raw_response.splitlines()
+            code_lines = [line for line in lines if not line.strip().lower().startswith("here is")]
+            code = "\n".join(code_lines).strip()
+
+        local_vars = {"df": df.copy(), "pd": pd}
+        import plotly.express as px
+        local_vars["px"] = px
+
+        exec(code, {}, local_vars)
+
+        result = local_vars.get("result", "✅ Code ran, but no `result` variable found.")
+        return result
+
+    except Exception as e:
+        return f"❌ Error:\n{e}\n\nTraceback:\n{traceback.format_exc()}"
