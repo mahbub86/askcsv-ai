@@ -1,9 +1,12 @@
 import pandas as pd
 import traceback
-from langchain_community.llms import Ollama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import tool
 
-llm = Ollama(model="llama3")
+llm = ChatGoogleGenerativeAI(
+    model="gemini-pro",
+    temperature=0.3
+)
 
 # Global DataFrame
 df = None
@@ -52,7 +55,11 @@ Assume df is already loaded.
             code_lines = [line for line in lines if not line.strip().lower().startswith("here is")]
             code = "\n".join(code_lines).strip()
 
-        local_vars = {"df": df.copy(), "pd": pd}
+        local_vars = {
+            "df": df.copy(),
+            "pd": pd
+        }
+
         import plotly.express as px
         local_vars["px"] = px
 

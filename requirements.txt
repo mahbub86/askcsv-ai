@@ -3,4 +3,5 @@ pandas
 plotly
 langchain
 langchain-community
-ollama
+langchain-google-genai
+google-generativeai
